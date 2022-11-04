@@ -62,7 +62,7 @@ STL Additions is a library designed to contain all necessary functions for Array
 
 ## Changelog
 
-### Pre-release 0.0.1
+### Pre-release 0.1.0
 
 - Added functions to show dyncamic arrays and STL containers
 - Functions can show nested containers' elements recursively
