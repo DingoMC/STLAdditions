@@ -3,6 +3,7 @@
 #include <iostream>
 #include <typeinfo>
 #include <stdexcept>
+#include <math.h>
 #include <vector>
 #include <list>
 #include <set>
@@ -10,6 +11,7 @@
 #define MAX_I(a, b) (a > b ? a : b)
 #pragma GCC optimize("O3")
 using namespace std;
+enum op {add = 0, subtract = 1, multiply = 2, divide = 3, power = 4, mod = 5};
 namespace astl {
     // Function prototypes
     template<class T> void show(T Elem, bool = false, bool = false);
@@ -37,9 +39,7 @@ namespace astl {
      * @param arraySize Array Length
      */
     template <class T> void show (T* Array, int arraySize, bool showType, bool fromRecursion) {
-        if (arraySize < 0) {
-            throw std::invalid_argument("arraySize must be a positive integer!");
-        }
+        if (arraySize < 0) throw std::invalid_argument("arraySize must be a positive integer!");
         if (showType) cout<<"`Array` ";
         cout<<"[";
         for (unsigned i = 0; i < arraySize; i++) {
@@ -60,9 +60,7 @@ namespace astl {
      * @param showType Default to false. When true it also shows type of iterable element.
      */
     template<class T> void show (T** Array, int arraySize1, int arraySize2, bool showType, bool fromRecursion) {
-        if (arraySize1 < 0 || arraySize2 < 0) {
-            throw std::invalid_argument("arraySize must be a positive integer!");
-        }
+        if (arraySize1 < 0 || arraySize2 < 0) throw std::invalid_argument("arraySize must be a positive integer!");
         if (showType) cout<<"`Array` ";
         cout<<"[";
         for (unsigned i = 0; i < arraySize1; i++) {
@@ -150,6 +148,245 @@ namespace astl {
     }
 
     /**
+     * @brief Execute operation with a constant on dynamic array
+     * 
+     * @tparam T Number
+     * @param Array Dynamic Array
+     * @param ArraySize Array Size
+     * @param Operation Math operation
+     * @param Constant Constant value
+     * @return T* 
+     */
+    template <class T> T* opr (const T* Array, int ArraySize, op Operation, T Constant) {
+        if (ArraySize < 0) throw std::invalid_argument("arraySize must be a positive integer!");
+        T* NewArray = new T[ArraySize];
+        switch (Operation) {
+            case op::add: {
+                for (unsigned i = 0; i < ArraySize; i++) NewArray[i] = Array[i] + Constant;
+                break;
+            }
+            case op::subtract: {
+                for (unsigned i = 0; i < ArraySize; i++) NewArray[i] = Array[i] - Constant;
+                break;
+            }
+            case op::multiply: {
+                for (unsigned i = 0; i < ArraySize; i++) NewArray[i] = Array[i] * Constant;
+                break;
+            }
+            case op::divide: {
+                if (Constant == 0) throw std::invalid_argument("Cannot divide by 0!");
+                for (unsigned i = 0; i < ArraySize; i++) NewArray[i] = Array[i] / Constant;
+                break;
+            }
+            case op::power: {
+                for (unsigned i = 0; i < ArraySize; i++) NewArray[i] = pow(Array[i], Constant);
+                break;
+            }
+            case op::mod: {
+                if (Constant <= 0) throw std::invalid_argument("Cannot do modulo less or equal 0!");
+                for (unsigned i = 0; i < ArraySize; i++) NewArray[i] = Array[i] % Constant;
+                break;
+            }
+            default: {throw std::invalid_argument("Unknown operation!");}
+        }
+        return NewArray;
+    }
+
+    /**
+     * @brief Execute operation with a constant on 2D dynamic array
+     * 
+     * @tparam T Number
+     * @param Array 2D Array
+     * @param ArraySize1 Array Length
+     * @param ArraySize2 Sub-Array Length
+     * @param Operation Math operation
+     * @param Constant Constant value
+     * @return T** 
+     */
+    template <class T> T** opr (T** Array, int ArraySize1, int ArraySize2, op Operation, T Constant) {
+        if (ArraySize1 < 0 || ArraySize2 < 0) throw std::invalid_argument("arraySize must be a positive integer!");
+        T** NewArray = new T*[ArraySize1];
+        for (int i = 0; i < ArraySize1; i++) NewArray[i] = new T[ArraySize2];
+        for (int i = 0; i < ArraySize1; i++) NewArray[i] = opr(Array[i], ArraySize2, Operation, Constant);
+        return NewArray;
+    }
+
+    /**
+     * @brief Execute operation with a constant on vector
+     * 
+     * @tparam T Number
+     * @param STL_Vec Vector
+     * @param Operation Math operation
+     * @param Constant Constant value
+     * @return vector < T > 
+     */
+    template <class T> vector < T > opr (const vector < T > STL_Vec, op Operation, T Constant) {
+        vector < T > NewVector;
+        int ArraySize = STL_Vec.size();
+        NewVector.resize(ArraySize);
+        switch (Operation) {
+            case op::add: {
+                for (unsigned i = 0; i < ArraySize; i++) NewVector[i] = STL_Vec[i] + Constant;
+                break;
+            }
+            case op::subtract: {
+                for (unsigned i = 0; i < ArraySize; i++) NewVector[i] = STL_Vec[i] - Constant;
+                break;
+            }
+            case op::multiply: {
+                for (unsigned i = 0; i < ArraySize; i++) NewVector[i] = STL_Vec[i] * Constant;
+                break;
+            }
+            case op::divide: {
+                if (Constant == 0) throw std::invalid_argument("Cannot divide by 0!");
+                for (unsigned i = 0; i < ArraySize; i++) NewVector[i] = STL_Vec[i] / Constant;
+                break;
+            }
+            case op::power: {
+                for (unsigned i = 0; i < ArraySize; i++) NewVector[i] = pow(STL_Vec[i], Constant);
+                break;
+            }
+            case op::mod: {
+                if (Constant <= 0) throw std::invalid_argument("Cannot do modulo less or equal 0!");
+                for (unsigned i = 0; i < ArraySize; i++) NewVector[i] = STL_Vec[i] % Constant;
+                break;
+            }
+            default: {throw std::invalid_argument("Unknown operation!");}
+        }
+        return NewVector;
+    }
+
+    /**
+     * @brief Execute operation with a constant on list
+     * 
+     * @tparam T 
+     * @param STL_List List
+     * @param Operation Math operation
+     * @param Constant Constant value
+     * @return list < T > 
+     */
+    template <class T> list < T > opr (const list < T > STL_List, op Operation, T Constant) {
+        list < T > NewList;
+        switch (Operation) {
+            case op::add: {
+                for (auto it = STL_List.cbegin(); it != STL_List.cend(); it++) NewList.push_back(*it + Constant);
+                break;
+            }
+            case op::subtract: {
+                for (auto it = STL_List.cbegin(); it != STL_List.cend(); it++) NewList.push_back(*it - Constant);
+                break;
+            }
+            case op::multiply: {
+                for (auto it = STL_List.cbegin(); it != STL_List.cend(); it++) NewList.push_back(*it * Constant);
+                break;
+            }
+            case op::divide: {
+                if (Constant == 0) throw std::invalid_argument("Cannot divide by 0!");
+                for (auto it = STL_List.cbegin(); it != STL_List.cend(); it++) NewList.push_back(*it / Constant);
+                break;
+            }
+            case op::power: {
+                for (auto it = STL_List.cbegin(); it != STL_List.cend(); it++) NewList.push_back(pow(*it, Constant));
+                break;
+            }
+            case op::mod: {
+                if (Constant <= 0) throw std::invalid_argument("Cannot do modulo less or equal 0!");
+                for (auto it = STL_List.cbegin(); it != STL_List.cend(); it++) NewList.push_back(*it % Constant);
+                break;
+            }
+            default: {throw std::invalid_argument("Unknown operation!");}
+        }
+        return NewList;
+    }
+
+    /**
+     * @brief Execute operation with a constant on set
+     * 
+     * @tparam T Number
+     * @param STL_Set Set
+     * @param Operation Math opertaion
+     * @param Constant Constant value
+     * @return set < T > 
+     */
+    template <class T> set < T > opr (const set < T > STL_Set, op Operation, T Constant) {
+        set < T > NewSet;
+        switch (Operation) {
+            case op::add: {
+                for (auto it = STL_Set.cbegin(); it != STL_Set.cend(); it++) NewSet.insert(*it + Constant);
+                break;
+            }
+            case op::subtract: {
+                for (auto it = STL_Set.cbegin(); it != STL_Set.cend(); it++) NewSet.insert(*it - Constant);
+                break;
+            }
+            case op::multiply: {
+                for (auto it = STL_Set.cbegin(); it != STL_Set.cend(); it++) NewSet.insert(*it * Constant);
+                break;
+            }
+            case op::divide: {
+                if (Constant == 0) throw std::invalid_argument("Cannot divide by 0!");
+                for (auto it = STL_Set.cbegin(); it != STL_Set.cend(); it++) NewSet.insert(*it / Constant);
+                break;
+            }
+            case op::power: {
+                for (auto it = STL_Set.cbegin(); it != STL_Set.cend(); it++) NewSet.insert(pow(*it, Constant));
+                break;
+            }
+            case op::mod: {
+                if (Constant <= 0) throw std::invalid_argument("Cannot do modulo less or equal 0!");
+                for (auto it = STL_Set.cbegin(); it != STL_Set.cend(); it++) NewSet.insert(*it % Constant);
+                break;
+            }
+            default: {throw std::invalid_argument("Unknown operation!");}
+        }
+        return NewSet;
+    }
+
+    /**
+     * @brief Execute operation with a constant on map
+     * 
+     * @tparam T Key Type
+     * @tparam U Value Type (Number)
+     * @param STL_Map Map
+     * @param Operation Math Operation
+     * @param Constant Constant value
+     * @return map < T, U > 
+     */
+    template <class T, class U> map < T, U > opr (const map < T, U > STL_Map, op Operation, U Constant) {
+        map < T, U > NewMap;
+        switch (Operation) {
+            case op::add: {
+                for (typename map<T, U>::const_iterator it = STL_Map.begin(); it != STL_Map.end(); ++it) NewMap.insert(make_pair(it->first, it->second + Constant));
+                break;
+            }
+            case op::subtract: {
+                for (typename map<T, U>::const_iterator it = STL_Map.begin(); it != STL_Map.end(); ++it) NewMap.insert(make_pair(it->first, it->second - Constant));
+                break;
+            }
+            case op::multiply: {
+                for (typename map<T, U>::const_iterator it = STL_Map.begin(); it != STL_Map.end(); ++it) NewMap.insert(make_pair(it->first, it->second * Constant));
+                break;
+            }
+            case op::divide: {
+                if (Constant == 0) throw std::invalid_argument("Cannot divide by 0!");
+                for (typename map<T, U>::const_iterator it = STL_Map.begin(); it != STL_Map.end(); ++it) NewMap.insert(make_pair(it->first, it->second / Constant));
+                break;
+            }
+            case op::power: {
+                for (typename map<T, U>::const_iterator it = STL_Map.begin(); it != STL_Map.end(); ++it) NewMap.insert(make_pair(it->first, pow(it->second, Constant)));
+                break;
+            }
+            case op::mod: {
+                if (Constant <= 0) throw std::invalid_argument("Cannot do modulo less or equal 0!");
+                for (typename map<T, U>::const_iterator it = STL_Map.begin(); it != STL_Map.end(); ++it) NewMap.insert(make_pair(it->first, it->second % Constant));
+                break;
+            }
+            default: {throw std::invalid_argument("Unknown operation!");}
+        }
+        return NewMap;
+    }
+
+    /**
      * @brief Adds two 1D Arrays
      * 
      * @tparam T Number
@@ -162,9 +399,7 @@ namespace astl {
      * @return T* 1D Array
      */
     template <class T, class U> T* add (const T* A1, int size_A1, const U* A2, int size_A2, int &new_size) {
-        if (size_A1 < 0 || size_A2 < 0) {
-            throw std::invalid_argument("arraySize must be a positive integer!");
-        }
+        if (size_A1 < 0 || size_A2 < 0) throw std::invalid_argument("arraySize must be a positive integer!");
         new_size = MAX_I(size_A1, size_A2);
         T* A3 = new T[new_size];
         for (unsigned i = 0; i < new_size; i++) A3[i] = 0;
@@ -189,9 +424,7 @@ namespace astl {
      * @return T** 2D Array
      */
     template <class T, class U> T** add (T** A1, int A1_size1, int A1_size2, U** A2, int A2_size1, int A2_size2, int &new_size1, int &new_size2) {
-        if (A1_size1 < 0 || A1_size2 < 0 || A2_size1 < 0 || A2_size2 < 0) {
-            throw std::invalid_argument("arraySize must be a positive integer!");
-        }
+        if (A1_size1 < 0 || A1_size2 < 0 || A2_size1 < 0 || A2_size2 < 0) throw std::invalid_argument("arraySize must be a positive integer!");
         new_size1 = MAX_I(A1_size1, A2_size1);
         new_size2 = MAX_I(A1_size2, A2_size2);
         T** A3 = new T*[new_size1];
