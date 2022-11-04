@@ -116,7 +116,95 @@ STL Additions is a library designed to contain all necessary functions for Array
 
     `const std::map<T, U> &A1`, `const std::map<T, U> &A2` - Maps to add
 
+### `opr()` - Functions to make arithmetic operations on all container elements
+
+- **Math operations definitions**
+
+  - `op::add` = 0 - Addition
+  - `op::subtract` = 1 - Subtraction
+  - `op::multiply` = 2 - Multiplication
+  - `op::divide` = 3 - Division
+  - `op::power` = 4 - Exponentiation
+  - `op::mod` = 5 - Modulo
+
+- **Global `opr()` function parameters**
+
+    `op Operation` - Arithmetic operation to execute
+
+    `T Constant` - Value as a second argument of operation
+
+- **Operation on 1D Array**
+
+    `template<class T> T *astl::opr(const T *Array, int ArraySize, op Operation, T Constant)`
+
+    `T *Array` - Dynamic Array
+
+    `int ArraySize` - Length of an array. If negative, function throws an exception
+
+- **Operation on 2D Array**
+
+    `template<class T> T **astl::opr(T **Array, int ArraySize1, int ArraySize2, op Operation, T Constant)`
+
+    `T **Array` - Dynamic Array
+
+    `int ArraySize1`, `int ArraySize2` - Length of an array and sub-array. If negative, function throws an exception
+
+- **Operation on vector**
+
+    `template<class T> std::vector<T> astl::opr(std::vector<T> STL_Vec, op Operation, T Constant)`
+
+    `std::vector<T> STL_Vec` - Vector
+
+- **Operation on list**
+
+    `template<class T> std::list<T> astl::opr(std::list<T> STL_List, op Operation, T Constant)`
+
+    `std::list<T> STL_List` - List
+
+- **Operation on set**
+
+    `template<class T> std::set<T> astl::opr(std::set<T> STL_Set, op Operation, T Constant)`
+
+    `std::set<T> STL_Set` - Set
+
+- **Operation on map**
+
+    `template<class T, class U> std::map<T, U> astl::opr(std::map<T, U> STL_Map, op Operation, U Constant)`
+
+    `std::map<T, U> STL_Map` - Map
+
 ## Changelog
+
+### Pre-release 0.3.0
+
+- Added functions to make arithmetic operations on all values using constant value
+- Supported containers: 1D and 2D dynamic array, vector, list, set, map
+- Supported operations: add, subtract, multiply, divide, power, mod
+
+> NOTE: operation functions does not support recursive containers.
+
+#### Operation Examples
+
+- Operations on 1D Dynamic Arrays / vectors / lists:
+
+    Input: `Array [1, 2, 3]`, `Value 2`
+
+    Output: Add: `[3, 4, 5]`, Subtract `[-1, 0, 1]`, Multiply `[2, 4, 6]`, Divide `[0, 1, 1]`, Power `[1, 4, 9]`, Mod `[1, 0, 1]`
+- Operations on 2D Dynamic Arrays:
+
+    Input: `Array [[0, 1], [1, 2]]`, `Value 2`
+
+    Output: Add: `[[2, 3], [3, 4]]`, Subtract `[[-2, -1], [-1, 0]]`, Multiply `[[0, 2], [2, 4]]`, Divide `[[0, 0], [0, 1]]`, Power `[[0, 1], [1, 4]]`, Mod `[[0, 1], [1, 0]]`
+- Operations on sets
+
+    Input: `Set {0, 1, 2, 3}`, `Value 2`
+
+    Output: Add: `{2, 3, 4, 5}`, Subtract `{-2, -1, 0, 1}`, Multiply `{0, 2, 4, 6}`, Divide `{0, 1}`, Power `{0, 1, 4, 9}`, Mod `{0, 1}`
+- Operations on maps
+
+    Input: `Map {A: 0, B: 1, C: 2}`, `Value:2`
+
+    Output: Add: `{A: 2, B: 3, C: 4}`, Subtract `{A: -2, B: -1, C: 0}`, Multiply `{A: 0, B: 2, C: 4}`, Divide `{A: 0, B: 0, C: 1}`, Power `{A: 0, B: 1, C: 4}`, Mod `{A: 0, B: 1, C: 0}`
 
 ### Pre-release 0.2.0
 
