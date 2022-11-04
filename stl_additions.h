@@ -149,6 +149,18 @@ namespace astl {
         if (!fromRecursion) cout<<endl;
     }
 
+    /**
+     * @brief Adds two 1D Arrays
+     * 
+     * @tparam T Number
+     * @tparam U Number
+     * @param A1 1st Array
+     * @param size_A1 1st Array size
+     * @param A2 2nd Array
+     * @param size_A2 2nd Array size
+     * @param new_size Array size passed by reference
+     * @return T* 1D Array
+     */
     template <class T, class U> T* add (const T* A1, int size_A1, const U* A2, int size_A2, int &new_size) {
         if (size_A1 < 0 || size_A2 < 0) {
             throw std::invalid_argument("arraySize must be a positive integer!");
@@ -161,6 +173,21 @@ namespace astl {
         return A3;
     }
 
+    /**
+     * @brief Adds two 2D Arrays
+     * 
+     * @tparam T Number
+     * @tparam U Number
+     * @param A1 1st 2D Array
+     * @param A1_size1 1st Array length
+     * @param A1_size2 1st Array sub-length
+     * @param A2 2nd 2D Array
+     * @param A2_size1 2nd Array length
+     * @param A2_size2 2nd Array sub-length
+     * @param new_size1 Array length passed by reference
+     * @param new_size2 Sub-array length passed by reference
+     * @return T** 2D Array
+     */
     template <class T, class U> T** add (T** A1, int A1_size1, int A1_size2, U** A2, int A2_size1, int A2_size2, int &new_size1, int &new_size2) {
         if (A1_size1 < 0 || A1_size2 < 0 || A2_size1 < 0 || A2_size2 < 0) {
             throw std::invalid_argument("arraySize must be a positive integer!");
@@ -175,6 +202,15 @@ namespace astl {
         return A3;
     }
 
+    /**
+     * @brief Adds two vectors
+     * 
+     * @tparam T Number
+     * @tparam U Number
+     * @param A1 1st Vector
+     * @param A2 2nd Vector
+     * @return vector < T > 
+     */
     template <class T, class U> vector < T > add (const vector < T > &A1, const vector < U > &A2) {
         vector < T > A3;
         unsigned A1_s = A1.size();
@@ -187,6 +223,15 @@ namespace astl {
         return A3;
     }
 
+    /**
+     * @brief Adds two lists
+     * 
+     * @tparam T Number
+     * @tparam U Number
+     * @param A1 1st List
+     * @param A2 2nd List
+     * @return list < T > 
+     */
     template <class T, class U> list < T > add (const list < T > &A1, const list < U > &A2) {
         list < T > A3;
         unsigned A1_s = A1.size();
@@ -213,6 +258,14 @@ namespace astl {
         return A3;
     }
 
+    /**
+     * @brief Adds two sets (union)
+     * 
+     * @tparam T Any
+     * @param A1 1st Set
+     * @param A2 2nd Set
+     * @return set < T > 
+     */
     template <class T> set < T > add (const set < T > &A1, const set < T > &A2) {
         set < T > A3;
         for (auto it = A1.cbegin(); it != A1.cend(); it++) A3.insert(*it);
@@ -220,6 +273,15 @@ namespace astl {
         return A3;
     }
 
+    /**
+     * @brief Adds two maps (repeated keys will result in adding two values)
+     * 
+     * @tparam T Key
+     * @tparam U Value
+     * @param A1 1st Map
+     * @param A2 2nd Map
+     * @return map < T, U > 
+     */
     template <class T, class U> map < T, U > add (const map < T, U > &A1, const map < T, U > &A2) {
         map < T, U > A3; 
         for (typename map<T, U>::const_iterator it = A1.begin(); it != A1.end(); ++it) {
