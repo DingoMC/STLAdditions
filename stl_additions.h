@@ -7,6 +7,7 @@
 #include <list>
 #include <set>
 #include <map>
+#define MAX_I(a, b) (a > b ? a : b)
 #pragma GCC optimize("O3")
 using namespace std;
 namespace astl {
@@ -14,9 +15,9 @@ namespace astl {
     template<class T> void show(T Elem, bool = false, bool = false);
     template<class T> void show(T* Array, int, bool showType = false, bool = false);
     template<class T> void show(T** Array, int, int, bool showType = false, bool = false);
-    template<class T> void show(const vector<T> &Vec, bool showType = false, bool = false);
-    template<class T> void show(const list<T> &List, bool showType = false, bool = false);
-    template<class T> void show(const set<T> &Set, bool showType = false, bool = false);
+    template<class T> void show(const vector < T > &STL_Vec, bool showType = false, bool = false);
+    template<class T> void show(const list < T > &STL_List, bool showType = false, bool = false);
+    template<class T> void show(const set < T > &STL_Set, bool showType = false, bool = false);
     template<class T, class U> void show(const map<T, U> &Map, bool showType = false, bool = false);
     /**
      * @brief Show Single Element
@@ -76,15 +77,15 @@ namespace astl {
      * @brief Show STL Vector
      * 
      * @tparam T Vector Element Type
-     * @param Vec STL Vector
+     * @param STL_Vec STL Vector
      * @param showType Default to false. When true it also shows type of iterable element.
      */
-    template<class T> void show (const vector < T > &Vec, bool showType, bool fromRecursion) {
-        unsigned V_size = Vec.size();
+    template<class T> void show (const vector < T > &STL_Vec, bool showType, bool fromRecursion) {
+        unsigned V_size = STL_Vec.size();
         if (showType) cout<<"`Vector` ";
         cout<<"[";
         for (unsigned i = 0; i < V_size; i++) {
-            show(Vec[i], showType, true);
+            show(STL_Vec[i], showType, true);
             if (i < V_size - 1) cout<<", ";
         }
         cout<<"]";
@@ -95,14 +96,14 @@ namespace astl {
      * @brief Show STL List
      * 
      * @tparam T List Element Type
-     * @param List STL List
+     * @param STL_List STL List
      * @param showType Default to false. When true it also shows type of iterable element.
      */
-    template<class T> void show (const list < T > &List, bool showType, bool fromRecursion) {
+    template<class T> void show (const list < T > &STL_List, bool showType, bool fromRecursion) {
         if (showType) cout<<"`List` ";
         cout<<"[";
-        for (auto it = List.cbegin(); it != List.cend(); it++) {
-            if (it != List.cbegin()) cout<<", ";
+        for (auto it = STL_List.cbegin(); it != STL_List.cend(); it++) {
+            if (it != STL_List.cbegin()) cout<<", ";
             show(*it, showType, true);
         }
         cout<<"]";
@@ -113,14 +114,14 @@ namespace astl {
      * @brief Show STL Set
      * 
      * @tparam T Set Element Type
-     * @param Set STL Set
+     * @param STL_Set STL Set
      * @param showType Default to false. When true it also shows type of iterable element.
      */
-    template<class T> void show (const set < T > &Set, bool showType, bool fromRecursion) {
+    template<class T> void show (const set < T > &STL_Set, bool showType, bool fromRecursion) {
         if (showType) cout<<"`Set` ";
         cout<<"{";
-        for (auto it = Set.cbegin(); it != Set.cend(); it++) {
-            if (it != Set.cbegin()) cout<<", ";
+        for (auto it = STL_Set.cbegin(); it != STL_Set.cend(); it++) {
+            if (it != STL_Set.cbegin()) cout<<", ";
             show(*it, showType, true);
         }
         cout<<"}";
@@ -146,6 +147,91 @@ namespace astl {
         }
         cout<<"}";
         if (!fromRecursion) cout<<endl;
+    }
+
+    template <class T, class U> T* add (const T* A1, int size_A1, const U* A2, int size_A2, int &new_size) {
+        if (size_A1 < 0 || size_A2 < 0) {
+            throw std::invalid_argument("arraySize must be a positive integer!");
+        }
+        new_size = MAX_I(size_A1, size_A2);
+        T* A3 = new T[new_size];
+        for (unsigned i = 0; i < new_size; i++) A3[i] = 0;
+        for (unsigned i = 0; i < size_A1; i++) A3[i] += A1[i];
+        for (unsigned i = 0; i < size_A2; i++) A3[i] += A2[i];
+        return A3;
+    }
+
+    template <class T, class U> T** add (T** A1, int A1_size1, int A1_size2, U** A2, int A2_size1, int A2_size2, int &new_size1, int &new_size2) {
+        if (A1_size1 < 0 || A1_size2 < 0 || A2_size1 < 0 || A2_size2 < 0) {
+            throw std::invalid_argument("arraySize must be a positive integer!");
+        }
+        new_size1 = MAX_I(A1_size1, A2_size1);
+        new_size2 = MAX_I(A1_size2, A2_size2);
+        T** A3 = new T*[new_size1];
+        for (unsigned i = 0; i < new_size1; i++) A3[i] = new T[new_size2];
+        for (unsigned i = 0; i < new_size1; i++) for (unsigned j = 0; j < new_size2; j++) A3[i][j] = 0;
+        for (unsigned i = 0; i < A1_size1; i++) for (unsigned j = 0; j < A1_size2; j++) A3[i][j] += A1[i][j];
+        for (unsigned i = 0; i < A2_size1; i++) for (unsigned j = 0; j < A2_size2; j++) A3[i][j] += A2[i][j];
+        return A3;
+    }
+
+    template <class T, class U> vector < T > add (const vector < T > &A1, const vector < U > &A2) {
+        vector < T > A3;
+        unsigned A1_s = A1.size();
+        unsigned A2_s = A2.size();
+        unsigned A3_s = MAX_I(A1_s, A2_s);
+        A3.resize(A3_s);
+        for (unsigned i = 0; i < A3_s; i++) A3[i] = 0;
+        for (unsigned i = 0; i < A1_s; i++) A3[i] += A1[i];
+        for (unsigned i = 0; i < A2_s; i++) A3[i] += A2[i];
+        return A3;
+    }
+
+    template <class T, class U> list < T > add (const list < T > &A1, const list < U > &A2) {
+        list < T > A3;
+        unsigned A1_s = A1.size();
+        unsigned A2_s = A2.size();
+        if (A1_s > A2_s) {
+            auto it2 = A2.cbegin();
+            for (auto it = A1.cbegin(); it != A1.cend(); it++) {
+                if (it2 != A2.cend()) {
+                    A3.push_back(*it + *it2);
+                    it2++;
+                }
+                else A3.push_back(*it);
+            }
+            return A3;
+        }
+        auto it1 = A1.cbegin();
+        for (auto it = A2.cbegin(); it != A2.cend(); it++) {
+            if (it1 != A1.cend()) {
+                A3.push_back(*it + *it1);
+                it1++;
+            }
+            else A3.push_back(*it);
+        }
+        return A3;
+    }
+
+    template <class T> set < T > add (const set < T > &A1, const set < T > &A2) {
+        set < T > A3;
+        for (auto it = A1.cbegin(); it != A1.cend(); it++) A3.insert(*it);
+        for (auto it = A2.cbegin(); it != A2.cend(); it++) A3.insert(*it);
+        return A3;
+    }
+
+    template <class T, class U> map < T, U > add (const map < T, U > &A1, const map < T, U > &A2) {
+        map < T, U > A3; 
+        for (typename map<T, U>::const_iterator it = A1.begin(); it != A1.end(); ++it) {
+            auto it2 = A2.find(it->first);
+            if (it2 == A2.end()) A3.insert(make_pair(it->first, it->second));
+            else A3.insert(make_pair(it->first, (it->second + it2->second)));
+        }
+        for (typename map<T, U>::const_iterator it = A2.begin(); it != A2.end(); ++it) {
+            auto it2 = A3.find(it->first);
+            if (it2 == A3.end()) A3.insert(make_pair(it->first, it->second));
+        }
+        return A3;
     }
 }
 #endif // !STL_ADDITIONS_H
