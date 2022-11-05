@@ -176,7 +176,50 @@ STL Additions is a library designed to contain all necessary functions for Array
 
     `set_op SetOperation` - Set Operation
 
+### `opr() type 3` - Functions executing cross-container operations
+
+- **Operation on Dynamic Array and Vector**
+
+  - Returning Array:
+
+    `template<class T, class U> T *astl::opr(const T *Array, int ArraySize, op Operation, const std::vector<U> &STL_Vec, int &new_size)`
+
+    `int &new_size` - Returns new array size by reference
+
+  - Returning Vector:
+
+    `template<class T, class U> std::vector<T> astl::opr(const std::vector<T> &STL_Vec, op Operation, const U *Array, int ArraySize)`
+
+- **Operation on Dynamic Array and List**
+
+  - Returning Array:
+
+    `template<class T, class U> T *astl::opr(const T *Array, int ArraySize, op Operation, const std::list<U> &STL_List, int &new_size)`
+
+    `int &new_size` - Returns new array size by reference
+
+  - Returning List:
+
+    `template<class T, class U> std::list<T> astl::opr(const std::list<T> &STL_List, op Operation, const U *Array, int ArraySize)`
+
+- **Operation on Vector and List**
+
+  - Returning Vector:
+
+    `template<class T, class U> std::vector<T> astl::opr(const std::vector<T> &STL_Vec, op Operation, const std::list<U> &STL_List)`
+
+  - Returning List:
+
+    `template<class T, class U> std::list<T> astl::opr(const std::list<T> &STL_List, op Operation, const std::vector<U> &STL_Vec)`
+
 ## Changelog
+
+### Pre-release 0.5.0
+
+- Added cross-container opr() functions to provide calculations between arrays
+- Supported containers: Dynamic array, vector, list
+
+> NOTE: Container order matters. Executing operation on vector and list returns vector, but operation on list and vector returns list.
 
 ### Pre-release 0.4.0
 
