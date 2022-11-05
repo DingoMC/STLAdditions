@@ -16,13 +16,13 @@ STL Additions is a library designed to contain all necessary functions for Array
 
 - **Show single non-iterable element.**
 
-    `template<class T> void astl::show(T Elem, bool showType = false, bool fromRecursion = false)`
+    `astl::show(T Elem, bool showType = false, bool fromRecursion = false)`
 
     `T Elem` - Non-iterable element
 
 - **Show Dynamic Array.**
 
-    `template<class T> void astl::show(T *Array, int arraySize, bool showType, bool fromRecursion = false)`
+    `astl::show(T *Array, int arraySize, bool showType, bool fromRecursion = false)`
 
     `T *Array` - Array to show
 
@@ -30,7 +30,7 @@ STL Additions is a library designed to contain all necessary functions for Array
 
 - **Show 2D Dynamic Array.**
 
-    `template<class T> void astl::show(T **Array, int arraySize1, int arraySize2, bool showType, bool fromRecursion = false)`
+    `astl::show(T **Array, int arraySize1, int arraySize2, bool showType, bool fromRecursion = false)`
 
     `T **Array` - Array to show
 
@@ -40,25 +40,25 @@ STL Additions is a library designed to contain all necessary functions for Array
 
 - **Show STL Vector**
 
-    `template<class T> void astl::show(const std::vector<T> &STL_Vec, bool showType, bool fromRecursion = false)`
+    `astl::show(const std::vector<T> &STL_Vec, bool showType, bool fromRecursion = false)`
 
     `const std::vector<T> &STL_Vec` - Vector to show
 
 - **Show STL List**
 
-    `template<class T> void astl::show(const std::list<T> &STL_List, bool showType, bool fromRecursion = false)`
+    `void astl::show(const std::list<T> &STL_List, bool showType, bool fromRecursion = false)`
 
     `const std::list<T> &STL_List` - List to show
 
 - **Show STL Set**
 
-    `template<class T> void astl::show(const std::set<T> &STL_Set, bool showType, bool fromRecursion = false)`
+    `astl::show(const std::set<T> &STL_Set, bool showType, bool fromRecursion = false)`
 
     `const std::set<T> &STL_Set` - Set to show
 
 - **Show STL Map**
 
-    `template<class T, class U> void astl::show(const std::map<T, U> &Map, bool showType, bool fromRecursion = false)`
+    `astl::show(const std::map<T, U> &Map, bool showType, bool fromRecursion = false)`
 
     `const std::map<T, U> &Map` - Map to show
 
@@ -81,7 +81,7 @@ STL Additions is a library designed to contain all necessary functions for Array
 
 - **Operation on 1D Array**
 
-    `template<class T> T *astl::opr(const T *Array, int ArraySize, op Operation, T Constant)`
+    `astl::opr(const T *Array, int ArraySize, op Operation, T Constant)`
 
     `T *Array` - Dynamic Array
 
@@ -89,7 +89,7 @@ STL Additions is a library designed to contain all necessary functions for Array
 
 - **Operation on 2D Array**
 
-    `template<class T> T **astl::opr(T **Array, int ArraySize1, int ArraySize2, op Operation, T Constant)`
+    `astl::opr(T **Array, int ArraySize1, int ArraySize2, op Operation, T Constant)`
 
     `T **Array` - Dynamic Array
 
@@ -97,25 +97,25 @@ STL Additions is a library designed to contain all necessary functions for Array
 
 - **Operation on vector**
 
-    `template<class T> std::vector<T> astl::opr(std::vector<T> STL_Vec, op Operation, T Constant)`
+    `astl::opr(std::vector<T> STL_Vec, op Operation, T Constant)`
 
     `std::vector<T> STL_Vec` - Vector
 
 - **Operation on list**
 
-    `template<class T> std::list<T> astl::opr(std::list<T> STL_List, op Operation, T Constant)`
+    `astl::opr(std::list<T> STL_List, op Operation, T Constant)`
 
     `std::list<T> STL_List` - List
 
 - **Operation on set**
 
-    `template<class T> std::set<T> astl::opr(std::set<T> STL_Set, op Operation, T Constant)`
+    `astl::opr(std::set<T> STL_Set, op Operation, T Constant)`
 
     `std::set<T> STL_Set` - Set
 
 - **Operation on map**
 
-    `template<class T, class U> std::map<T, U> astl::opr(std::map<T, U> STL_Map, op Operation, U Constant)`
+    `astl::opr(std::map<T, U> STL_Map, op Operation, U Constant)`
 
     `std::map<T, U> STL_Map` - Map
 
@@ -123,7 +123,7 @@ STL Additions is a library designed to contain all necessary functions for Array
 
 - **Operation on two dynamic Arrays**
 
-    `template<class T, class U> T *astl::opr(const T *A1, int size_A1, op Operation, const U *A2, int size_A2, int &new_size)`
+    `astl::opr(const T *A1, int size_A1, op Operation, const U *A2, int size_A2, int &new_size)`
 
     `const T *A1` - 1st Array
 
@@ -137,7 +137,7 @@ STL Additions is a library designed to contain all necessary functions for Array
 
 - **Operation on two 2D dynamic Arrays**
 
-    `template<class T, class U> T **astl::opr(T **A1, int A1_size1, int A1_size2, op Operation, U **A2, int A2_size1, int A2_size2, int &new_size1, int &new_size2)`
+    `astl::opr(T **A1, int A1_size1, int A1_size2, op Operation, U **A2, int A2_size1, int A2_size2, int &new_size1, int &new_size2)`
 
     `T **A1` - 1st 2D Array
 
@@ -151,13 +151,13 @@ STL Additions is a library designed to contain all necessary functions for Array
 
 - **Operation on two vectors**
 
-    `template<class T, class U> std::vector<T> astl::opr(const std::vector<T> &A1, op Operation, const std::vector<U> &A2)`
+    `astl::opr(const std::vector<T> &A1, op Operation, const std::vector<U> &A2)`
 
     `const std::vector<T> &A1`, `const std::vector<U> &A2` - STL Vectors
 
 - **Operation on two lists**
 
-    `template<class T, class U> std::list<T> astl::opr(const std::list<T> &A1, op Operation, const std::list<U> &A2)`
+    `astl::opr(const std::list<T> &A1, op Operation, const std::list<U> &A2)`
 
     `const std::list<T> &A1`, `const std::list<U> &A2` - STL Lists
 
@@ -170,7 +170,7 @@ STL Additions is a library designed to contain all necessary functions for Array
 
 - **Operation on two sets**
 
-    `template<class T> std::set<T> astl::opr(const std::set<T> &A1, set_op SetOperation, const std::set<T> &A2)`
+    `astl::opr(const std::set<T> &A1, set_op SetOperation, const std::set<T> &A2)`
 
     `const std::set<T> &A1`, `const std::set<T> &A2` - STL Sets
 
@@ -182,35 +182,35 @@ STL Additions is a library designed to contain all necessary functions for Array
 
   - Returning Array:
 
-    `template<class T, class U> T *astl::opr(const T *Array, int ArraySize, op Operation, const std::vector<U> &STL_Vec, int &new_size)`
+    `astl::opr(const T *Array, int ArraySize, op Operation, const std::vector<U> &STL_Vec, int &new_size)`
 
     `int &new_size` - Returns new array size by reference
 
   - Returning Vector:
 
-    `template<class T, class U> std::vector<T> astl::opr(const std::vector<T> &STL_Vec, op Operation, const U *Array, int ArraySize)`
+    `astl::opr(const std::vector<T> &STL_Vec, op Operation, const U *Array, int ArraySize)`
 
 - **Operation on Dynamic Array and List**
 
   - Returning Array:
 
-    `template<class T, class U> T *astl::opr(const T *Array, int ArraySize, op Operation, const std::list<U> &STL_List, int &new_size)`
+    `astl::opr(const T *Array, int ArraySize, op Operation, const std::list<U> &STL_List, int &new_size)`
 
     `int &new_size` - Returns new array size by reference
 
   - Returning List:
 
-    `template<class T, class U> std::list<T> astl::opr(const std::list<T> &STL_List, op Operation, const U *Array, int ArraySize)`
+    `astl::opr(const std::list<T> &STL_List, op Operation, const U *Array, int ArraySize)`
 
 - **Operation on Vector and List**
 
   - Returning Vector:
 
-    `template<class T, class U> std::vector<T> astl::opr(const std::vector<T> &STL_Vec, op Operation, const std::list<U> &STL_List)`
+    `astl::opr(const std::vector<T> &STL_Vec, op Operation, const std::list<U> &STL_List)`
 
   - Returning List:
 
-    `template<class T, class U> std::list<T> astl::opr(const std::list<T> &STL_List, op Operation, const std::vector<U> &STL_Vec)`
+    `astl::opr(const std::list<T> &STL_List, op Operation, const std::vector<U> &STL_Vec)`
 
 ## Changelog
 
