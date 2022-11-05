@@ -1,3 +1,15 @@
+/**
+ * @file stl_additions.h
+ * @author DingoMC (www.dingomc.net)
+ * @brief STL Additions is a library to support operating on arrays and STL containers
+ * It provides variety of functions that can be applied to containers in astl namespace.
+ * @warning Library made in C++11! Lower C++ versions may cause malfunction!
+ * @version 0.5.0
+ * @date 2022-11-05
+ * 
+ * @copyright Copyright (c) 2022
+ * 
+ */
 #ifndef STL_ADDITIONS_H
 #define STL_ADDITIONS_H
 #include <iostream>
@@ -16,6 +28,10 @@ enum op {add = 0, subtract = 1, multiply = 2, divide = 3, power = 4, mod = 5};
 // Set operations
 enum set_op {sum = 0, diff = 1, intersect = 2, ex_or = 3};
 namespace astl {
+    /*
+        showing Functions
+        Added in 0.1.0
+    */
     // Function prototypes
     template<class T> void show(T Elem, bool = false, bool = false);
     template<class T> void show(T* Array, int, bool showType = false, bool = false);
@@ -24,6 +40,7 @@ namespace astl {
     template<class T> void show(const list < T > &STL_List, bool showType = false, bool = false);
     template<class T> void show(const set < T > &STL_Set, bool showType = false, bool = false);
     template<class T, class U> void show(const map<T, U> &Map, bool showType = false, bool = false);
+
     /**
      * @brief Show Single Element
      * 
@@ -150,6 +167,11 @@ namespace astl {
         if (!fromRecursion) cout<<endl;
     }
 
+    /*
+        opr() - operations with constants
+        Added in 0.3.0
+    */
+
     /**
      * @brief Execute operation with a constant on dynamic array
      * 
@@ -163,34 +185,24 @@ namespace astl {
     template <class T> T* opr (const T* Array, int ArraySize, op Operation, T Constant) {
         if (ArraySize < 0) throw std::invalid_argument("arraySize must be a positive integer!");
         T* NewArray = new T[ArraySize];
-        switch (Operation) {
-            case op::add: {
-                for (unsigned i = 0; i < ArraySize; i++) NewArray[i] = Array[i] + Constant;
-                break;
+        for (unsigned i = 0; i < ArraySize; i++) {
+            switch (Operation) {
+                case op::add: {NewArray[i] = Array[i] + Constant; break;}
+                case op::subtract: {NewArray[i] = Array[i] - Constant; break;}
+                case op::multiply: {NewArray[i] = Array[i] * Constant; break;}
+                case op::divide: {
+                    if (Constant == 0) throw std::invalid_argument("Cannot divide by 0!");
+                    NewArray[i] = Array[i] / Constant;
+                    break;
+                }
+                case op::power: {NewArray[i] = pow(Array[i], Constant); break;}
+                case op::mod: {
+                    if (Constant <= 0) throw std::invalid_argument("Cannot do modulo less or equal 0!");
+                    NewArray[i] = Array[i] % Constant;
+                    break;
+                }
+                default: {throw std::invalid_argument("Unknown operation!");}
             }
-            case op::subtract: {
-                for (unsigned i = 0; i < ArraySize; i++) NewArray[i] = Array[i] - Constant;
-                break;
-            }
-            case op::multiply: {
-                for (unsigned i = 0; i < ArraySize; i++) NewArray[i] = Array[i] * Constant;
-                break;
-            }
-            case op::divide: {
-                if (Constant == 0) throw std::invalid_argument("Cannot divide by 0!");
-                for (unsigned i = 0; i < ArraySize; i++) NewArray[i] = Array[i] / Constant;
-                break;
-            }
-            case op::power: {
-                for (unsigned i = 0; i < ArraySize; i++) NewArray[i] = pow(Array[i], Constant);
-                break;
-            }
-            case op::mod: {
-                if (Constant <= 0) throw std::invalid_argument("Cannot do modulo less or equal 0!");
-                for (unsigned i = 0; i < ArraySize; i++) NewArray[i] = Array[i] % Constant;
-                break;
-            }
-            default: {throw std::invalid_argument("Unknown operation!");}
         }
         return NewArray;
     }
@@ -227,34 +239,24 @@ namespace astl {
         vector < T > NewVector;
         int ArraySize = STL_Vec.size();
         NewVector.resize(ArraySize);
-        switch (Operation) {
-            case op::add: {
-                for (unsigned i = 0; i < ArraySize; i++) NewVector[i] = STL_Vec[i] + Constant;
-                break;
+        for (unsigned i = 0; i < ArraySize; i++) {
+            switch (Operation) {
+                case op::add: {NewVector[i] = STL_Vec[i] + Constant; break;}
+                case op::subtract: {NewVector[i] = STL_Vec[i] - Constant; break;}
+                case op::multiply: {NewVector[i] = STL_Vec[i] * Constant; break;}
+                case op::divide: {
+                    if (Constant == 0) throw std::invalid_argument("Cannot divide by 0!");
+                    NewVector[i] = STL_Vec[i] / Constant;
+                    break;
+                }
+                case op::power: {NewVector[i] = pow(STL_Vec[i], Constant); break;}
+                case op::mod: {
+                    if (Constant <= 0) throw std::invalid_argument("Cannot do modulo less or equal 0!");
+                    NewVector[i] = STL_Vec[i] % Constant;
+                    break;
+                }
+                default: {throw std::invalid_argument("Unknown operation!");}
             }
-            case op::subtract: {
-                for (unsigned i = 0; i < ArraySize; i++) NewVector[i] = STL_Vec[i] - Constant;
-                break;
-            }
-            case op::multiply: {
-                for (unsigned i = 0; i < ArraySize; i++) NewVector[i] = STL_Vec[i] * Constant;
-                break;
-            }
-            case op::divide: {
-                if (Constant == 0) throw std::invalid_argument("Cannot divide by 0!");
-                for (unsigned i = 0; i < ArraySize; i++) NewVector[i] = STL_Vec[i] / Constant;
-                break;
-            }
-            case op::power: {
-                for (unsigned i = 0; i < ArraySize; i++) NewVector[i] = pow(STL_Vec[i], Constant);
-                break;
-            }
-            case op::mod: {
-                if (Constant <= 0) throw std::invalid_argument("Cannot do modulo less or equal 0!");
-                for (unsigned i = 0; i < ArraySize; i++) NewVector[i] = STL_Vec[i] % Constant;
-                break;
-            }
-            default: {throw std::invalid_argument("Unknown operation!");}
         }
         return NewVector;
     }
@@ -270,34 +272,24 @@ namespace astl {
      */
     template <class T> list < T > opr (const list < T > &STL_List, op Operation, T Constant) {
         list < T > NewList;
-        switch (Operation) {
-            case op::add: {
-                for (auto it = STL_List.cbegin(); it != STL_List.cend(); it++) NewList.push_back(*it + Constant);
-                break;
+        for (auto it = STL_List.cbegin(); it != STL_List.cend(); it++) {
+            switch (Operation) {
+                case op::add: {NewList.push_back(*it + Constant); break;}
+                case op::subtract: {NewList.push_back(*it - Constant); break;}
+                case op::multiply: {NewList.push_back(*it * Constant); break;}
+                case op::divide: {
+                    if (Constant == 0) throw std::invalid_argument("Cannot divide by 0!");
+                    NewList.push_back(*it / Constant);
+                    break;
+                }
+                case op::power: {NewList.push_back(pow(*it, Constant)); break;}
+                case op::mod: {
+                    if (Constant <= 0) throw std::invalid_argument("Cannot do modulo less or equal 0!");
+                    NewList.push_back(*it % Constant);
+                    break;
+                }
+                default: {throw std::invalid_argument("Unknown operation!");}
             }
-            case op::subtract: {
-                for (auto it = STL_List.cbegin(); it != STL_List.cend(); it++) NewList.push_back(*it - Constant);
-                break;
-            }
-            case op::multiply: {
-                for (auto it = STL_List.cbegin(); it != STL_List.cend(); it++) NewList.push_back(*it * Constant);
-                break;
-            }
-            case op::divide: {
-                if (Constant == 0) throw std::invalid_argument("Cannot divide by 0!");
-                for (auto it = STL_List.cbegin(); it != STL_List.cend(); it++) NewList.push_back(*it / Constant);
-                break;
-            }
-            case op::power: {
-                for (auto it = STL_List.cbegin(); it != STL_List.cend(); it++) NewList.push_back(pow(*it, Constant));
-                break;
-            }
-            case op::mod: {
-                if (Constant <= 0) throw std::invalid_argument("Cannot do modulo less or equal 0!");
-                for (auto it = STL_List.cbegin(); it != STL_List.cend(); it++) NewList.push_back(*it % Constant);
-                break;
-            }
-            default: {throw std::invalid_argument("Unknown operation!");}
         }
         return NewList;
     }
@@ -313,34 +305,24 @@ namespace astl {
      */
     template <class T> set < T > opr (const set < T > &STL_Set, op Operation, T Constant) {
         set < T > NewSet;
-        switch (Operation) {
-            case op::add: {
-                for (auto it = STL_Set.cbegin(); it != STL_Set.cend(); it++) NewSet.insert(*it + Constant);
-                break;
+        for (auto it = STL_Set.cbegin(); it != STL_Set.cend(); it++) {
+            switch (Operation) {
+                case op::add: {NewSet.insert(*it + Constant); break;}
+                case op::subtract: {NewSet.insert(*it - Constant); break;}
+                case op::multiply: {NewSet.insert(*it * Constant); break;}
+                case op::divide: {
+                    if (Constant == 0) throw std::invalid_argument("Cannot divide by 0!");
+                    NewSet.insert(*it / Constant);
+                    break;
+                }
+                case op::power: {NewSet.insert(pow(*it, Constant)); break;}
+                case op::mod: {
+                    if (Constant <= 0) throw std::invalid_argument("Cannot do modulo less or equal 0!");
+                    NewSet.insert(*it % Constant);
+                    break;
+                }
+                default: {throw std::invalid_argument("Unknown operation!");}
             }
-            case op::subtract: {
-                for (auto it = STL_Set.cbegin(); it != STL_Set.cend(); it++) NewSet.insert(*it - Constant);
-                break;
-            }
-            case op::multiply: {
-                for (auto it = STL_Set.cbegin(); it != STL_Set.cend(); it++) NewSet.insert(*it * Constant);
-                break;
-            }
-            case op::divide: {
-                if (Constant == 0) throw std::invalid_argument("Cannot divide by 0!");
-                for (auto it = STL_Set.cbegin(); it != STL_Set.cend(); it++) NewSet.insert(*it / Constant);
-                break;
-            }
-            case op::power: {
-                for (auto it = STL_Set.cbegin(); it != STL_Set.cend(); it++) NewSet.insert(pow(*it, Constant));
-                break;
-            }
-            case op::mod: {
-                if (Constant <= 0) throw std::invalid_argument("Cannot do modulo less or equal 0!");
-                for (auto it = STL_Set.cbegin(); it != STL_Set.cend(); it++) NewSet.insert(*it % Constant);
-                break;
-            }
-            default: {throw std::invalid_argument("Unknown operation!");}
         }
         return NewSet;
     }
@@ -357,37 +339,35 @@ namespace astl {
      */
     template <class T, class U> map < T, U > opr (const map < T, U > &STL_Map, op Operation, U Constant) {
         map < T, U > NewMap;
-        switch (Operation) {
-            case op::add: {
-                for (typename map<T, U>::const_iterator it = STL_Map.begin(); it != STL_Map.end(); ++it) NewMap.insert(make_pair(it->first, it->second + Constant));
-                break;
+        for (typename map<T, U>::const_iterator it = STL_Map.begin(); it != STL_Map.end(); ++it) {
+            switch (Operation) {
+                case op::add: {NewMap.insert(make_pair(it->first, it->second + Constant)); break;}
+                case op::subtract: {NewMap.insert(make_pair(it->first, it->second - Constant)); break;}
+                case op::multiply: {NewMap.insert(make_pair(it->first, it->second * Constant)); break;}
+                case op::divide: {
+                    if (Constant == 0) throw std::invalid_argument("Cannot divide by 0!");
+                    NewMap.insert(make_pair(it->first, it->second / Constant));
+                    break;
+                }
+                case op::power: {
+                    NewMap.insert(make_pair(it->first, pow(it->second, Constant)));
+                    break;
+                }
+                case op::mod: {
+                    if (Constant <= 0) throw std::invalid_argument("Cannot do modulo less or equal 0!");
+                    NewMap.insert(make_pair(it->first, it->second % Constant));
+                    break;
+                }
+                default: {throw std::invalid_argument("Unknown operation!");}
             }
-            case op::subtract: {
-                for (typename map<T, U>::const_iterator it = STL_Map.begin(); it != STL_Map.end(); ++it) NewMap.insert(make_pair(it->first, it->second - Constant));
-                break;
-            }
-            case op::multiply: {
-                for (typename map<T, U>::const_iterator it = STL_Map.begin(); it != STL_Map.end(); ++it) NewMap.insert(make_pair(it->first, it->second * Constant));
-                break;
-            }
-            case op::divide: {
-                if (Constant == 0) throw std::invalid_argument("Cannot divide by 0!");
-                for (typename map<T, U>::const_iterator it = STL_Map.begin(); it != STL_Map.end(); ++it) NewMap.insert(make_pair(it->first, it->second / Constant));
-                break;
-            }
-            case op::power: {
-                for (typename map<T, U>::const_iterator it = STL_Map.begin(); it != STL_Map.end(); ++it) NewMap.insert(make_pair(it->first, pow(it->second, Constant)));
-                break;
-            }
-            case op::mod: {
-                if (Constant <= 0) throw std::invalid_argument("Cannot do modulo less or equal 0!");
-                for (typename map<T, U>::const_iterator it = STL_Map.begin(); it != STL_Map.end(); ++it) NewMap.insert(make_pair(it->first, it->second % Constant));
-                break;
-            }
-            default: {throw std::invalid_argument("Unknown operation!");}
         }
         return NewMap;
     }
+
+    /*
+        opr() type 2 - operations on two containers
+        Added in 0.4.0
+    */
 
     /**
      * @brief Execute operation on two dynamic arrays
@@ -408,38 +388,24 @@ namespace astl {
         T* A3 = new T[new_size];
         for (unsigned i = 0; i < new_size; i++) A3[i] = 0;
         for (unsigned i = 0; i < size_A1; i++) A3[i] += A1[i];
-        switch (Operation) {
-            case op::add: {
-                for (unsigned i = 0; i < size_A2; i++) A3[i] += A2[i];
-                break;
-            }
-            case op::subtract: {
-                for (unsigned i = 0; i < size_A2; i++) A3[i] -= A2[i];
-                break;
-            }
-            case op::multiply: {
-                for (unsigned i = 0; i < size_A2; i++) A3[i] *= A2[i];
-                break;
-            }
-            case op::divide: {
-                for (unsigned i = 0; i < size_A2; i++) {
+        for (unsigned i = 0; i < size_A2; i++) {
+            switch (Operation) {
+                case op::add: {A3[i] += A2[i]; break;}
+                case op::subtract: {A3[i] -= A2[i]; break;}
+                case op::multiply: {A3[i] *= A2[i]; break;}
+                case op::divide: {
                     if (A2[i] == 0) throw std::invalid_argument("Cannot divide by 0!");
                     A3[i] /= A2[i];
+                    break;
                 }
-                break;
-            }
-            case op::power: {
-                for (unsigned i = 0; i < size_A2; i++) A3[i] = pow(A3[i], A2[i]);
-                break;
-            }
-            case op::mod: {
-                for (unsigned i = 0; i < size_A2; i++) {
+                case op::power: {A3[i] = pow(A3[i], A2[i]); break;}
+                case op::mod: {
                     if (A2[i] <= 0) throw std::invalid_argument("Cannot do modulo less or equal 0!");
                     A3[i] %= A2[i];
+                    break;
                 }
-                break;
+                default: {throw std::invalid_argument("Unknown operation!");}
             }
-            default: {throw std::invalid_argument("Unknown operation!");}
         }
         return A3;
     }
@@ -468,42 +434,26 @@ namespace astl {
         for (unsigned i = 0; i < new_size1; i++) A3[i] = new T[new_size2];
         for (unsigned i = 0; i < new_size1; i++) for (unsigned j = 0; j < new_size2; j++) A3[i][j] = 0;
         for (unsigned i = 0; i < A1_size1; i++) for (unsigned j = 0; j < A1_size2; j++) A3[i][j] += A1[i][j];
-        switch (Operation) {
-            case op::add: {
-                for (unsigned i = 0; i < A2_size1; i++) for (unsigned j = 0; j < A2_size2; j++) A3[i][j] += A2[i][j];
-                break;
-            }
-            case op::subtract: {
-                for (unsigned i = 0; i < A2_size1; i++) for (unsigned j = 0; j < A2_size2; j++) A3[i][j] -= A2[i][j];
-                break;
-            }
-            case op::multiply: {
-                for (unsigned i = 0; i < A2_size1; i++) for (unsigned j = 0; j < A2_size2; j++) A3[i][j] *= A2[i][j];
-                break;
-            }
-            case op::divide: {
-                for (unsigned i = 0; i < A2_size1; i++) {
-                    for (unsigned j = 0; j < A2_size2; j++) {
-                        if (A2[i] == 0) throw std::invalid_argument("Cannot divide by 0!");
+        for (unsigned i = 0; i < A2_size1; i++) {
+            for (unsigned j = 0; j < A2_size2; j++) {
+                switch (Operation) {
+                    case op::add: {A3[i][j] += A2[i][j]; break;}
+                    case op::subtract: {A3[i][j] -= A2[i][j]; break;}
+                    case op::multiply: {A3[i][j] *= A2[i][j]; break;}
+                    case op::divide: {
+                        if (A2[i][j] == 0) throw std::invalid_argument("Cannot divide by 0!");
                         A3[i][j] /= A2[i][j];
+                        break;
                     }
-                }
-                break;
-            }
-            case op::power: {
-                for (unsigned i = 0; i < A2_size1; i++) for (unsigned j = 0; j < A2_size2; j++) A3[i][j] = pow(A3[i][j], A2[i][j]);
-                break;
-            }
-            case op::mod: {
-                for (unsigned i = 0; i < A2_size1; i++) {
-                    for (unsigned j = 0; j < A2_size2; j++) {
+                    case op::power: {A3[i][j] = pow(A3[i][j], A2[i][j]); break;}
+                    case op::mod: {
                         if (A2[i][j] <= 0) throw std::invalid_argument("Cannot do modulo less or equal 0!");
                         A3[i][j] %= A2[i][j];
+                        break;
                     }
+                    default: {throw std::invalid_argument("Unknown operation!");}
                 }
-                break;
             }
-            default: {throw std::invalid_argument("Unknown operation!");}
         }
         return A3;
     }
@@ -526,44 +476,30 @@ namespace astl {
         A3.resize(A3_s);
         for (unsigned i = 0; i < A3_s; i++) A3[i] = 0;
         for (unsigned i = 0; i < A1_s; i++) A3[i] += A1[i];
-        switch (Operation) {
-            case op::add: {
-                for (unsigned i = 0; i < A2_s; i++) A3[i] += A2[i];
-                break;
-            }
-            case op::subtract: {
-                for (unsigned i = 0; i < A2_s; i++) A3[i] -= A2[i];
-                break;
-            }
-            case op::multiply: {
-                for (unsigned i = 0; i < A2_s; i++) A3[i] *= A2[i];
-                break;
-            }
-            case op::divide: {
-                for (unsigned i = 0; i < A2_s; i++) {
+        for (unsigned i = 0; i < A2_s; i++) {
+            switch (Operation) {
+                case op::add: {A3[i] += A2[i]; break;}
+                case op::subtract: {A3[i] -= A2[i]; break;}
+                case op::multiply: {A3[i] *= A2[i]; break;}
+                case op::divide: {
                     if (A2[i] == 0) throw std::invalid_argument("Cannot divide by 0!");
                     A3[i] /= A2[i];
+                    break;
                 }
-                break;
-            }
-            case op::power: {
-                for (unsigned i = 0; i < A2_s; i++) A3[i] = pow(A3[i], A2[i]);
-                break;
-            }
-            case op::mod: {
-                for (unsigned i = 0; i < A2_s; i++) {
+                case op::power: {A3[i] = pow(A3[i], A2[i]); break;}
+                case op::mod: {
                     if (A2[i] <= 0) throw std::invalid_argument("Cannot do modulo less or equal 0!");
                     A3[i] %= A2[i];
+                    break;
                 }
-                break;
+                default: {throw std::invalid_argument("Unknown operation!");}
             }
-            default: {throw std::invalid_argument("Unknown operation!");}
         }
         return A3;
     }
 
     /**
-     * @brief Adds two lists
+     * @brief Execute operation on two lists
      * 
      * @tparam T Number
      * @tparam U Number
@@ -702,6 +638,269 @@ namespace astl {
             default: {throw std::invalid_argument("Unknown operation!");}
         }
         return A3;
+    }
+
+    /*
+        opr() type 3 - cross-container operations
+        Added in 0.5.0
+    */
+    
+    /**
+     * @brief Execute operation on dynamic array and vector
+     * 
+     * @tparam T Number 
+     * @tparam U Number
+     * @param Array Dynamic Array
+     * @param ArraySize Array Size
+     * @param Operation Math Operation
+     * @param Vec STL Vector
+     * @param new_size Result Array length returned by reference
+     * @return T* Result Array
+     */
+    template <class T, class U> T* opr (const T* Array, int ArraySize, op Operation, const vector < U > &STL_Vec, int &new_size) {
+        if (ArraySize < 0) throw std::invalid_argument("arraySize must be a positive integer!");
+        int VecSize = STL_Vec.size();
+        new_size = MAX_I(ArraySize, VecSize);
+        T* NewArray = new T[new_size];
+        for (unsigned i = 0; i < new_size; i++) NewArray[i] = 0;
+        for (unsigned i = 0; i < ArraySize; i++) NewArray[i] += Array[i];
+        for (unsigned i = 0; i < VecSize; i++) {
+            switch (Operation) {
+                case op::add: {NewArray[i] += STL_Vec[i]; break;}
+                case op::subtract: {NewArray[i] -= STL_Vec[i]; break;}
+                case op::multiply: {NewArray[i] *= STL_Vec[i]; break;}
+                case op::divide: {
+                    if (STL_Vec[i] == 0) throw std::invalid_argument("Cannot divide by 0!");
+                    NewArray[i] /= STL_Vec[i];
+                    break;
+                }
+                case op::power: {NewArray[i] = pow(NewArray[i], STL_Vec[i]); break;}
+                case op::mod: {
+                    if (STL_Vec[i] <= 0) throw std::invalid_argument("Cannot do modulo less or equal 0!");
+                    NewArray[i] %= STL_Vec[i];
+                    break;
+                }
+                default: {throw std::invalid_argument("Unknown operation!");}
+            }
+        }
+        return NewArray;
+    }
+
+    /**
+     * @brief Execute operation on dynamic array and list
+     * 
+     * @tparam T Number
+     * @tparam U Number
+     * @param Array Dynamic Array
+     * @param ArraySize Array Size
+     * @param Operation Math Operation
+     * @param STL_List STL List
+     * @param new_size Result Array length returned by reference
+     * @return T* Result Array
+     */
+    template <class T, class U> T* opr (const T* Array, int ArraySize, op Operation, const list < U > &STL_List, int &new_size) {
+        if (ArraySize < 0) throw std::invalid_argument("arraySize must be a positive integer!");
+        int ListSize = STL_List.size();
+        new_size = MAX_I(ArraySize, ListSize);
+        T* NewArray = new T[new_size];
+        for (unsigned i = 0; i < new_size; i++) NewArray[i] = 0;
+        for (unsigned i = 0; i < ArraySize; i++) NewArray[i] += Array[i];
+        unsigned iter = 0;
+        for (auto it = STL_List.cbegin(); it != STL_List.cend(); it++) {
+            switch (Operation) {
+                case op::add: {NewArray[iter] += *it; break;}
+                case op::subtract: {NewArray[iter] -= *it; break;}
+                case op::multiply: {NewArray[iter] *= *it; break;}
+                case op::divide: {
+                    if (*it == 0) throw std::invalid_argument("Cannot divide by 0!");
+                    NewArray[iter] /= *it;
+                    break;
+                }
+                case op::power: {NewArray[iter] = pow(NewArray[iter], *it); break;}
+                case op::mod: {
+                    if (*it <= 0) throw std::invalid_argument("Cannot do modulo less or equal 0!");
+                    NewArray[iter] %= *it;
+                    break;
+                }
+                default: {throw std::invalid_argument("Unknown operation!");}
+            }
+            iter++;
+        }
+        return NewArray;
+    }
+
+    /**
+     * @brief Execute operation on vector and dynamic array
+     * 
+     * @tparam T Number
+     * @tparam U Number
+     * @param STL_Vec STL Vector
+     * @param Operation Math Operation
+     * @param Array Dynamic Array
+     * @param ArraySize Array Size
+     * @return vector < T > Result Vector
+     */
+    template <class T, class U> vector < T > opr (const vector < T > &STL_Vec, op Operation, const U* Array, int ArraySize) {
+        if (ArraySize < 0) throw std::invalid_argument("arraySize must be a positive integer!");
+        int VecSize = STL_Vec.size();
+        int new_size = MAX_I(ArraySize, VecSize);
+        vector < T > NewVector;
+        NewVector.resize(new_size);
+        for (unsigned i = 0; i < new_size; i++) NewVector[i] = 0;
+        for (unsigned i = 0; i < VecSize; i++) NewVector[i] += STL_Vec[i];
+        for (unsigned i = 0; i < ArraySize; i++) {
+            switch (Operation) {
+                case op::add: {NewVector[i] += Array[i]; break;}
+                case op::subtract: {NewVector[i] -= Array[i]; break;}
+                case op::multiply: {NewVector[i] *= Array[i]; break;}
+                case op::divide: {
+                    if (Array[i] == 0) throw std::invalid_argument("Cannot divide by 0!");
+                    NewVector[i] /= Array[i];
+                    break;
+                }
+                case op::power: {NewVector[i] = pow(NewVector[i], Array[i]); break;}
+                case op::mod: {
+                    if (Array[i] <= 0) throw std::invalid_argument("Cannot do modulo less or equal 0!");
+                    NewVector[i] %= Array[i];
+                    break;
+                }
+                default: {throw std::invalid_argument("Unknown operation!");}
+            }
+        }
+        return NewVector;
+    }
+
+    /**
+     * @brief Execute operation on vector and list
+     * 
+     * @tparam T Number
+     * @tparam U Number
+     * @param STL_Vec STL Vector
+     * @param Operation Math Operation
+     * @param STL_List STL List
+     * @return vector < T > Result Vector
+     */
+    template <class T, class U> vector < T > opr (const vector < T > &STL_Vec, op Operation, const list < U > &STL_List) {
+        int ListSize = STL_List.size();
+        int VecSize = STL_Vec.size();
+        int new_size = MAX_I(VecSize, ListSize);
+        vector < T > NewVector;
+        NewVector.resize(new_size);
+        for (unsigned i = 0; i < new_size; i++) NewVector[i] = 0;
+        for (unsigned i = 0; i < VecSize; i++) NewVector[i] += STL_Vec[i];
+        unsigned iter = 0;
+        for (auto it = STL_List.cbegin(); it != STL_List.cend(); it++) {
+            switch (Operation) {
+                case op::add: {NewVector[iter] += *it; break;}
+                case op::subtract: {NewVector[iter] -= *it; break;}
+                case op::multiply: {NewVector[iter] *= *it; break;}
+                case op::divide: {
+                    if (*it == 0) throw std::invalid_argument("Cannot divide by 0!");
+                    NewVector[iter] /= *it;
+                    break;
+                }
+                case op::power: {NewVector[iter] = pow(NewVector[iter], *it); break;}
+                case op::mod: {
+                    if (*it <= 0) throw std::invalid_argument("Cannot do modulo less or equal 0!");
+                    NewVector[iter] %= *it;
+                    break;
+                }
+                default: {throw std::invalid_argument("Unknown operation!");}
+            }
+            iter++;
+        }
+        return NewVector;
+    }
+
+    /**
+     * @brief Execute operation on list and array
+     * 
+     * @tparam T Number
+     * @tparam U Number
+     * @param STL_List STL List
+     * @param Operation Math Operation
+     * @param Array Dynamic Array
+     * @param ArraySize Array size
+     * @return list < T > Result List
+     */
+    template <class T, class U> list < T > opr (const list < T > &STL_List, op Operation, const U* Array, int ArraySize) {
+        int ListSize = STL_List.size();
+        if (ArraySize < 0) throw std::invalid_argument("arraySize must be a positive integer!");
+        int new_size = MAX_I(ListSize, ArraySize);
+        list < T > NewList;
+        auto it = STL_List.cbegin();
+        for (unsigned i = 0; i < new_size; i++) {
+            T v1 = 0;
+            U v2 = 0;
+            if (it != STL_List.cend()) {
+                v1 = *it;
+                it++;
+            }
+            if (i < ArraySize) v2 = Array[i];
+            switch (Operation) {
+                case op::add: {NewList.push_back(v1 + v2); break;}
+                case op::subtract: {NewList.push_back(v1 - v2); break;}
+                case op::multiply: {NewList.push_back(v1 * v2); break;}
+                case op::divide: {
+                    if (v2 == 0) throw std::invalid_argument("Cannot divide by 0!");
+                    NewList.push_back(v1 / v2);
+                    break;
+                }
+                case op::power: {NewList.push_back(pow(v1, v2)); break;}
+                case op::mod: {
+                    if (v2 <= 0) throw std::invalid_argument("Cannot do modulo less or equal 0!");
+                    NewList.push_back(v1 % v2);
+                    break;
+                }
+                default: {throw std::invalid_argument("Unknown operation!");}
+            }
+        }
+        return NewList;
+    }
+
+    /**
+     * @brief Execute operation on list and vector
+     * 
+     * @tparam T Number
+     * @tparam U Number
+     * @param STL_List STL List
+     * @param Operation Math operation
+     * @param STL_Vec STL Vector
+     * @return list < T > Result List
+     */
+    template <class T, class U> list < T > opr (const list < T > &STL_List, op Operation, const vector < U > &STL_Vec) {
+        int ListSize = STL_List.size();
+        int VecSize = STL_Vec.size();
+        int new_size = MAX_I(ListSize, VecSize);
+        list < T > NewList;
+        auto it = STL_List.cbegin();
+        for (unsigned i = 0; i < new_size; i++) {
+            T v1 = 0;
+            U v2 = 0;
+            if (it != STL_List.cend()) {
+                v1 = *it;
+                it++;
+            }
+            if (i < VecSize) v2 = STL_Vec[i];
+            switch (Operation) {
+                case op::add: {NewList.push_back(v1 + v2); break;}
+                case op::subtract: {NewList.push_back(v1 - v2); break;}
+                case op::multiply: {NewList.push_back(v1 * v2); break;}
+                case op::divide: {
+                    if (v2 == 0) throw std::invalid_argument("Cannot divide by 0!");
+                    NewList.push_back(v1 / v2);
+                    break;
+                }
+                case op::power: {NewList.push_back(pow(v1, v2)); break;}
+                case op::mod: {
+                    if (v2 <= 0) throw std::invalid_argument("Cannot do modulo less or equal 0!");
+                    NewList.push_back(v1 % v2);
+                    break;
+                }
+                default: {throw std::invalid_argument("Unknown operation!");}
+            }
+        }
+        return NewList;
     }
 }
 #endif // !STL_ADDITIONS_H
