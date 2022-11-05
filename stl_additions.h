@@ -11,7 +11,10 @@
 #define MAX_I(a, b) (a > b ? a : b)
 #pragma GCC optimize("O3")
 using namespace std;
+// Arithmetic ooperations
 enum op {add = 0, subtract = 1, multiply = 2, divide = 3, power = 4, mod = 5};
+// Set operations
+enum set_op {sum = 0, diff = 1, intersect = 2, ex_or = 3};
 namespace astl {
     // Function prototypes
     template<class T> void show(T Elem, bool = false, bool = false);
@@ -220,7 +223,7 @@ namespace astl {
      * @param Constant Constant value
      * @return vector < T > 
      */
-    template <class T> vector < T > opr (const vector < T > STL_Vec, op Operation, T Constant) {
+    template <class T> vector < T > opr (const vector < T > &STL_Vec, op Operation, T Constant) {
         vector < T > NewVector;
         int ArraySize = STL_Vec.size();
         NewVector.resize(ArraySize);
@@ -265,7 +268,7 @@ namespace astl {
      * @param Constant Constant value
      * @return list < T > 
      */
-    template <class T> list < T > opr (const list < T > STL_List, op Operation, T Constant) {
+    template <class T> list < T > opr (const list < T > &STL_List, op Operation, T Constant) {
         list < T > NewList;
         switch (Operation) {
             case op::add: {
@@ -308,7 +311,7 @@ namespace astl {
      * @param Constant Constant value
      * @return set < T > 
      */
-    template <class T> set < T > opr (const set < T > STL_Set, op Operation, T Constant) {
+    template <class T> set < T > opr (const set < T > &STL_Set, op Operation, T Constant) {
         set < T > NewSet;
         switch (Operation) {
             case op::add: {
@@ -352,7 +355,7 @@ namespace astl {
      * @param Constant Constant value
      * @return map < T, U > 
      */
-    template <class T, class U> map < T, U > opr (const map < T, U > STL_Map, op Operation, U Constant) {
+    template <class T, class U> map < T, U > opr (const map < T, U > &STL_Map, op Operation, U Constant) {
         map < T, U > NewMap;
         switch (Operation) {
             case op::add: {
@@ -387,35 +390,69 @@ namespace astl {
     }
 
     /**
-     * @brief Adds two 1D Arrays
+     * @brief Execute operation on two dynamic arrays
      * 
      * @tparam T Number
      * @tparam U Number
      * @param A1 1st Array
-     * @param size_A1 1st Array size
+     * @param size_A1 1st Array Size
+     * @param Operation Math Operation
      * @param A2 2nd Array
-     * @param size_A2 2nd Array size
-     * @param new_size Array size passed by reference
-     * @return T* 1D Array
+     * @param size_A2 2nd Array Size
+     * @param new_size Result Array length returned by reference
+     * @return T* Result Array
      */
-    template <class T, class U> T* add (const T* A1, int size_A1, const U* A2, int size_A2, int &new_size) {
+    template <class T, class U> T* opr (const T* A1, int size_A1, op Operation, const U* A2, int size_A2, int &new_size) {
         if (size_A1 < 0 || size_A2 < 0) throw std::invalid_argument("arraySize must be a positive integer!");
         new_size = MAX_I(size_A1, size_A2);
         T* A3 = new T[new_size];
         for (unsigned i = 0; i < new_size; i++) A3[i] = 0;
         for (unsigned i = 0; i < size_A1; i++) A3[i] += A1[i];
-        for (unsigned i = 0; i < size_A2; i++) A3[i] += A2[i];
+        switch (Operation) {
+            case op::add: {
+                for (unsigned i = 0; i < size_A2; i++) A3[i] += A2[i];
+                break;
+            }
+            case op::subtract: {
+                for (unsigned i = 0; i < size_A2; i++) A3[i] -= A2[i];
+                break;
+            }
+            case op::multiply: {
+                for (unsigned i = 0; i < size_A2; i++) A3[i] *= A2[i];
+                break;
+            }
+            case op::divide: {
+                for (unsigned i = 0; i < size_A2; i++) {
+                    if (A2[i] == 0) throw std::invalid_argument("Cannot divide by 0!");
+                    A3[i] /= A2[i];
+                }
+                break;
+            }
+            case op::power: {
+                for (unsigned i = 0; i < size_A2; i++) A3[i] = pow(A3[i], A2[i]);
+                break;
+            }
+            case op::mod: {
+                for (unsigned i = 0; i < size_A2; i++) {
+                    if (A2[i] <= 0) throw std::invalid_argument("Cannot do modulo less or equal 0!");
+                    A3[i] %= A2[i];
+                }
+                break;
+            }
+            default: {throw std::invalid_argument("Unknown operation!");}
+        }
         return A3;
     }
 
     /**
-     * @brief Adds two 2D Arrays
+     * @brief Execute operation on two 2D dynamic arrays
      * 
      * @tparam T Number
      * @tparam U Number
      * @param A1 1st 2D Array
      * @param A1_size1 1st Array length
      * @param A1_size2 1st Array sub-length
+     * @param Operation Math Operation
      * @param A2 2nd 2D Array
      * @param A2_size1 2nd Array length
      * @param A2_size2 2nd Array sub-length
@@ -423,7 +460,7 @@ namespace astl {
      * @param new_size2 Sub-array length passed by reference
      * @return T** 2D Array
      */
-    template <class T, class U> T** add (T** A1, int A1_size1, int A1_size2, U** A2, int A2_size1, int A2_size2, int &new_size1, int &new_size2) {
+    template <class T, class U> T** opr (T** A1, int A1_size1, int A1_size2, op Operation, U** A2, int A2_size1, int A2_size2, int &new_size1, int &new_size2) {
         if (A1_size1 < 0 || A1_size2 < 0 || A2_size1 < 0 || A2_size2 < 0) throw std::invalid_argument("arraySize must be a positive integer!");
         new_size1 = MAX_I(A1_size1, A2_size1);
         new_size2 = MAX_I(A1_size2, A2_size2);
@@ -431,20 +468,57 @@ namespace astl {
         for (unsigned i = 0; i < new_size1; i++) A3[i] = new T[new_size2];
         for (unsigned i = 0; i < new_size1; i++) for (unsigned j = 0; j < new_size2; j++) A3[i][j] = 0;
         for (unsigned i = 0; i < A1_size1; i++) for (unsigned j = 0; j < A1_size2; j++) A3[i][j] += A1[i][j];
-        for (unsigned i = 0; i < A2_size1; i++) for (unsigned j = 0; j < A2_size2; j++) A3[i][j] += A2[i][j];
+        switch (Operation) {
+            case op::add: {
+                for (unsigned i = 0; i < A2_size1; i++) for (unsigned j = 0; j < A2_size2; j++) A3[i][j] += A2[i][j];
+                break;
+            }
+            case op::subtract: {
+                for (unsigned i = 0; i < A2_size1; i++) for (unsigned j = 0; j < A2_size2; j++) A3[i][j] -= A2[i][j];
+                break;
+            }
+            case op::multiply: {
+                for (unsigned i = 0; i < A2_size1; i++) for (unsigned j = 0; j < A2_size2; j++) A3[i][j] *= A2[i][j];
+                break;
+            }
+            case op::divide: {
+                for (unsigned i = 0; i < A2_size1; i++) {
+                    for (unsigned j = 0; j < A2_size2; j++) {
+                        if (A2[i] == 0) throw std::invalid_argument("Cannot divide by 0!");
+                        A3[i][j] /= A2[i][j];
+                    }
+                }
+                break;
+            }
+            case op::power: {
+                for (unsigned i = 0; i < A2_size1; i++) for (unsigned j = 0; j < A2_size2; j++) A3[i][j] = pow(A3[i][j], A2[i][j]);
+                break;
+            }
+            case op::mod: {
+                for (unsigned i = 0; i < A2_size1; i++) {
+                    for (unsigned j = 0; j < A2_size2; j++) {
+                        if (A2[i][j] <= 0) throw std::invalid_argument("Cannot do modulo less or equal 0!");
+                        A3[i][j] %= A2[i][j];
+                    }
+                }
+                break;
+            }
+            default: {throw std::invalid_argument("Unknown operation!");}
+        }
         return A3;
     }
 
     /**
-     * @brief Adds two vectors
+     * @brief Execute operation on two vectors
      * 
      * @tparam T Number
      * @tparam U Number
      * @param A1 1st Vector
+     * @param Operation Math Operation
      * @param A2 2nd Vector
      * @return vector < T > 
      */
-    template <class T, class U> vector < T > add (const vector < T > &A1, const vector < U > &A2) {
+    template <class T, class U> vector < T > opr (const vector < T > &A1, op Operation, const vector < U > &A2) {
         vector < T > A3;
         unsigned A1_s = A1.size();
         unsigned A2_s = A2.size();
@@ -452,7 +526,39 @@ namespace astl {
         A3.resize(A3_s);
         for (unsigned i = 0; i < A3_s; i++) A3[i] = 0;
         for (unsigned i = 0; i < A1_s; i++) A3[i] += A1[i];
-        for (unsigned i = 0; i < A2_s; i++) A3[i] += A2[i];
+        switch (Operation) {
+            case op::add: {
+                for (unsigned i = 0; i < A2_s; i++) A3[i] += A2[i];
+                break;
+            }
+            case op::subtract: {
+                for (unsigned i = 0; i < A2_s; i++) A3[i] -= A2[i];
+                break;
+            }
+            case op::multiply: {
+                for (unsigned i = 0; i < A2_s; i++) A3[i] *= A2[i];
+                break;
+            }
+            case op::divide: {
+                for (unsigned i = 0; i < A2_s; i++) {
+                    if (A2[i] == 0) throw std::invalid_argument("Cannot divide by 0!");
+                    A3[i] /= A2[i];
+                }
+                break;
+            }
+            case op::power: {
+                for (unsigned i = 0; i < A2_s; i++) A3[i] = pow(A3[i], A2[i]);
+                break;
+            }
+            case op::mod: {
+                for (unsigned i = 0; i < A2_s; i++) {
+                    if (A2[i] <= 0) throw std::invalid_argument("Cannot do modulo less or equal 0!");
+                    A3[i] %= A2[i];
+                }
+                break;
+            }
+            default: {throw std::invalid_argument("Unknown operation!");}
+        }
         return A3;
     }
 
@@ -462,69 +568,138 @@ namespace astl {
      * @tparam T Number
      * @tparam U Number
      * @param A1 1st List
+     * @param Operation Math Operation
      * @param A2 2nd List
      * @return list < T > 
      */
-    template <class T, class U> list < T > add (const list < T > &A1, const list < U > &A2) {
+    template <class T, class U> list < T > opr (const list < T > &A1, op Operation, const list < U > &A2) {
         list < T > A3;
         unsigned A1_s = A1.size();
         unsigned A2_s = A2.size();
         if (A1_s > A2_s) {
             auto it2 = A2.cbegin();
             for (auto it = A1.cbegin(); it != A1.cend(); it++) {
+                T v1 = *it;
+                U v2 = 0;
                 if (it2 != A2.cend()) {
-                    A3.push_back(*it + *it2);
+                    v2 = *it2;
                     it2++;
                 }
-                else A3.push_back(*it);
+                switch (Operation) {
+                    case op::add: {A3.push_back(v1 + v2); break;}
+                    case op::subtract: {A3.push_back(v1 - v2); break;}
+                    case op::multiply: {A3.push_back(v1 * v2); break;}
+                    case op::divide: {
+                        if (v2 == 0) throw std::invalid_argument("Cannot divide by 0!");
+                        A3.push_back(v1 / v2);
+                        break;
+                    }
+                    case op::power: {A3.push_back(pow(v1, v2)); break;}
+                    case op::mod: {
+                        if (v2 <= 0) throw std::invalid_argument("Cannot do modulo less or equal 0!");
+                        A3.push_back(v1 % v2);
+                        break;
+                    }
+                    default: {throw std::invalid_argument("Unknown operation!");}
+                }
             }
             return A3;
         }
         auto it1 = A1.cbegin();
         for (auto it = A2.cbegin(); it != A2.cend(); it++) {
+            U v1 = *it;
+            T v2 = 0;
             if (it1 != A1.cend()) {
-                A3.push_back(*it + *it1);
+                v2 = *it1;
                 it1++;
             }
-            else A3.push_back(*it);
+            switch (Operation) {
+                case op::add: {A3.push_back(v2 + v1); break;}
+                case op::subtract: {A3.push_back(v2 - v1); break;}
+                case op::multiply: {A3.push_back(v2 * v1); break;}
+                case op::divide: {
+                    if (v1 == 0) throw std::invalid_argument("Cannot divide by 0!");
+                    A3.push_back(v2 / v1);
+                    break;
+                }
+                case op::power: {A3.push_back(pow(v2, v1)); break;}
+                case op::mod: {
+                    if (v1 <= 0) throw std::invalid_argument("Cannot do modulo less or equal 0!");
+                    A3.push_back(v2 % v1);
+                    break;
+                }
+                default: {throw std::invalid_argument("Unknown operation!");}
+            }
         }
         return A3;
     }
 
     /**
-     * @brief Adds two sets (union)
+     * @brief Execute operation on two sets
      * 
      * @tparam T Any
      * @param A1 1st Set
+     * @param SetOperation Set Operation
      * @param A2 2nd Set
      * @return set < T > 
      */
-    template <class T> set < T > add (const set < T > &A1, const set < T > &A2) {
+    template <class T> set < T > opr (const set < T > &A1, set_op SetOperation, const set < T > &A2) {
         set < T > A3;
-        for (auto it = A1.cbegin(); it != A1.cend(); it++) A3.insert(*it);
-        for (auto it = A2.cbegin(); it != A2.cend(); it++) A3.insert(*it);
-        return A3;
-    }
-
-    /**
-     * @brief Adds two maps (repeated keys will result in adding two values)
-     * 
-     * @tparam T Key
-     * @tparam U Value
-     * @param A1 1st Map
-     * @param A2 2nd Map
-     * @return map < T, U > 
-     */
-    template <class T, class U> map < T, U > add (const map < T, U > &A1, const map < T, U > &A2) {
-        map < T, U > A3; 
-        for (typename map<T, U>::const_iterator it = A1.begin(); it != A1.end(); ++it) {
-            auto it2 = A2.find(it->first);
-            if (it2 == A2.end()) A3.insert(make_pair(it->first, it->second));
-            else A3.insert(make_pair(it->first, (it->second + it2->second)));
-        }
-        for (typename map<T, U>::const_iterator it = A2.begin(); it != A2.end(); ++it) {
-            auto it2 = A3.find(it->first);
-            if (it2 == A3.end()) A3.insert(make_pair(it->first, it->second));
+        switch (SetOperation) {
+            case set_op::sum: {
+                for (auto it = A1.cbegin(); it != A1.cend(); it++) A3.insert(*it);
+                for (auto it = A2.cbegin(); it != A2.cend(); it++) A3.insert(*it);
+                break;
+            }
+            case set_op::diff: {
+                for (auto it = A1.cbegin(); it != A1.cend(); it++) A3.insert(*it);
+                for (auto it = A2.cbegin(); it != A2.cend(); it++) {
+                    if (A1.find(*it) != A1.cend()) {
+                        auto f = A3.find(*it);
+                        A3.erase(f);
+                    }
+                }
+                break;
+            }
+            case set_op::intersect: {
+                for (auto it = A1.cbegin(); it != A1.cend(); it++) A3.insert(*it);
+                for (auto it = A2.cbegin(); it != A2.cend(); it++) A3.insert(*it);
+                for (auto it = A1.cbegin(); it != A1.cend(); it++) {
+                    if (A2.find(*it) == A2.cend()) {
+                        auto f = A3.find(*it);
+                        A3.erase(f);
+                    }
+                }
+                for (auto it = A2.cbegin(); it != A2.cend(); it++) {
+                    if (A1.find(*it) == A1.cend()) {
+                        auto f = A3.find(*it);
+                        A3.erase(f);
+                    }
+                }
+                break;
+            }
+            case set_op::ex_or: {
+                set < T > A1_notA2;
+                for (auto it = A1.cbegin(); it != A1.cend(); it++) A1_notA2.insert(*it);
+                for (auto it = A2.cbegin(); it != A2.cend(); it++) {
+                    if (A1.find(*it) != A1.cend()) {
+                        auto f = A1_notA2.find(*it);
+                        A1_notA2.erase(f);
+                    }
+                }
+                set < T > A2_notA1;
+                for (auto it = A2.cbegin(); it != A2.cend(); it++) A2_notA1.insert(*it);
+                for (auto it = A1.cbegin(); it != A1.cend(); it++) {
+                    if (A2.find(*it) != A2.cend()) {
+                        auto f = A2_notA1.find(*it);
+                        A2_notA1.erase(f);
+                    }
+                }
+                for (auto it = A1_notA2.cbegin(); it != A1_notA2.cend(); it++) A3.insert(*it);
+                for (auto it = A2_notA1.cbegin(); it != A2_notA1.cend(); it++) A3.insert(*it);
+                break;
+            }
+            default: {throw std::invalid_argument("Unknown operation!");}
         }
         return A3;
     }
