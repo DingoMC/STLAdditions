@@ -61,6 +61,18 @@ int main() {
     astl::show(astl::opr(set_1, op::add, 2), true);
     astl::show(astl::opr(map_1, op::add, 2), true);*/
 
+    // Test cross-container operations
+    /*
+    int aa_size;
+    int *array_added = astl::opr(array_1D, 5, op::add, vec_2, aa_size);
+    astl::show(array_added, aa_size, true);
+    array_added = astl::opr(array_1D, 5, op::add, list_1, aa_size);
+    astl::show(array_added, aa_size, true);
+    astl::show(astl::opr(vec_1, op::add, array_1D_2, 8));
+    astl::show(astl::opr(vec_1, op::add, list_1));
+    astl::show(astl::opr(list_1, op::add, array_1D, 5));
+    astl::show(astl::opr(list_1, op::add, vec_2));*/
+    
     // Free memory to prevent leaks
     delete[] array_1D;
     delete[] array_1D_2;
